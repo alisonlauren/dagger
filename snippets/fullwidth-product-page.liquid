@@ -1,0 +1,133 @@
+{% if t_object != blank %}
+{% assign product = t_object %}
+{% endif %}
+{% capture vars %}
+{% assign selected_or_first_variant = product.selected_or_first_available_variant %}
+{% if product.featured_image == blank %}
+{% include 'image-placeholder' %}
+{% else %}
+{% capture image %}
+{% assign featured_image = selected_or_first_variant.featured_image | default: product.featured_image %}
+{% unless settings.container-width-large-devices contains 'px' %}{% assign product_img_size = '1024x1024' %}{% else %}{% assign product_img_size = 'grande' %}{% endunless %}
+<img src="{{ featured_image.src | product_img_url: product_img_size }}" alt="{{ featured_image.alt }}" itemprop="image">
+{% endcapture %}
+{% endif %}
+{% endcapture %}
+{% include '__poa-tag' with product %}
+
+<section id="{% include '__advanced-layout-id' with 'product-wrap' %}" class="product-wrap  section-wrap">
+  {% include '__containers-open' %}
+  <div class="visible-xs">
+    <h1 class="page-header" itemprop="name">{{ product.title }}</h1>
+  </div>
+
+  <div class="row" itemscope itemtype="http://data-vocabulary.org/Product">
+
+    <!-- images col -->
+    <div class="col-sm-6 {% if settings.product-page-image-placement == 'right' %}col-sm-push-6{% endif %}">
+      <div class="row product-images">
+        <div class="col-xs-12 col-sm-12">
+          <div class="thumbnail product-main-image">
+            {{ image }}
+          </div>
+        </div>
+        {% if product.images.size > 1 %}
+        {% for image in product.images %}
+        <div class="col-xs-12 col-sm-12">
+          <div class="thumbnail">
+            <div class="thumbnail-image product-main-thumb">
+              <a href="#" data-main-image="{{ image.src | product_img_url: product_img_size }}">
+                {{ image.src | product_img_url: 'master' | img_tag: image.alt }}
+              </a>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- details col -->
+    <div id="product-details" class="col-sm-6 {% if settings.product-page-image-placement == 'right' %}col-sm-pull-6{% endif %}">
+      <h1 class="hidden-xs" itemprop="name">{{ product.title }}</h1>
+      {% include 'product-badges' %}
+
+
+      {% if has_prices %}
+      {% if price_is_poa %}
+      <div class="product-price-poa">
+        <span>{% include '__localize' with 'POA' %}</span>
+      </div>
+      {% else %}
+      <div class="product-price" itemprop="offerDetails" itemscope itemtype="http://data-vocabulary.org/Offer">
+        <span class="price-field">{% include 'product-price' with selected_or_first_variant.price %}</span>
+        {% if settings.append-plus-taxes-to-price %}<small class="text-muted"> {% include '__localize' with 'plus taxes' %}</small>{% endif %}
+        <small class="compare-at-price text-muted"><del>{% include '__localize' with 'was' %} <span class="compare-at-price-field"></span></del></small>
+        {% include 'product-labels' with product %}
+        <meta itemprop="currency" content="{{ shop.currency }}" />
+        <meta itemprop="identifier" content="sku:{{ product.variants.first.sku }}" />
+      </div>
+      {% endif %}
+      {% endif %}
+
+      {% include 'shappify-sales-clock' with product %}
+      {% include 'product-availability' with product %}
+      {% if product.metafields.external-url != blank %}
+        <a href="{{ product.metafields.external-url.external-url }}" target="_blank" id="purchase" class="addtocart  btn-main purchase-btn btn-primary">
+          {{ product.metafields.external-button.external-button }}
+        </a><br />
+      {% else %}
+        {% if has_cart %}{% include 'product-add-to-cart-form' %}{% endif %}
+      {% endif %} 
+
+
+      {% if product.metafields.custom_links.size > 0 %}
+      <ul class="custom-links">
+        {% for l in product.metafields.custom_links %}
+        <li><a href="{{ l.last }}" class="btn btn-default" title="{{ l.first }}" target="_blank">{{ l.first }}</a></li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+      {% if product.metafields.custom_images.size > 0 %}
+      <ul class="custom-images">
+        {% for l in product.metafields.custom_images %}
+        <li><img src="{{ l.last }}" class="custom-image" alt="{{ l.first }}"></li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+
+{% comment %}      <div class="after-content">
+        {% unless settings.after_cart_content == blank %}
+        {{ settings.after_cart_content }}
+        {% endunless %}
+      </div>{% endcomment %}
+
+      {% include 'product-description' %}
+
+      {% include 'product-specs' %}   	
+
+      {% if product.metafields.spotify-embed.spotify-embed != blank %}
+        <iframe src="https://open.spotify.com/embed?uri=spotify:track:{{ product.metafields.spotify-embed.spotify-embed }}" width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+      {% endif %}
+      
+      {% if product.metafields.youtube-embed.youtube-embed != blank %}
+        <iframe class="cell" width="60%" height="100%" src="https://www.youtube.com/embed/{{ product.metafields.youtube-embed.youtube-embed }}?iv_load_policy=3&modestbranding=1&autoplay=1&controls=0&showinfo=0&wmode=opaque&branding=0&autohide=0&rel=0&loop=1&mute=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+      {% endif %}
+
+    </div>
+  </div>
+
+  {% comment %}
+      {% unless settings.yotpo-api-key == blank %}
+          <div class="yotpo yotpo-main-widget"
+               data-product-id="{{ product.id }}"
+               data-name="{{ product.title | escape }}"
+               data-url="{{ page.url }}"
+               data-image-url="{{ product.featured_image | product_img_url: "large" |replace: '?', '%3F' | replace: '&','%26'}}"
+               data-description="{{ product.description | escape }}">
+          </div>
+      {% endunless %}
+  {% endcomment%}
+  
+  {% include '__containers-close' %}
+</section>

@@ -1,0 +1,180 @@
+<div class="
+{% if template contains 'index' and settings.homepage-product-layout == 'tile-layout' %} 
+  home-grid  
+{% elsif template contains 'index' and settings.homepage-product-layout == 'lifestyle-layout' %}
+  col-sm-12 col-md-6
+{% elsif template contains 'index' and settings.homepage-product-layout == 'grid-layout' %} 
+
+ {% include '__thumbnail-span' %}
+
+  {% for tag in product-loop.tags %}tag-{{ tag | downcase | handleize }} 
+  {% endfor %}
+{% else %}
+  {% include '__thumbnail-span' %} {% for tag in product-loop.tags %}tag-{{ tag | downcase | handleize }} {% endfor %}{% if thumbnail_layout == 'masonry' %} masonry{% endif %} {% include '__product-data-attr' with _product %}
+{% endif %}
+
+">
+  <div class="product-thumbnail">
+    {% if template contains 'index' and settings.homepage-product-layout == 'tile-layout' %} 
+
+            <div class="thumbnail-image" style="background: url({{ product-loop.featured_image.src | product_img_url: 'grande' | }}) no-repeat center center;background-size: cover;"><a href="{{ product-loop.url }}"></a></div>
+    {% else %}
+      <div class="thumbnail-image{% if product_collection.metafields.secondary-image.show == 'true' and product-loop.metafields.secondary-image.src != blank %} has-secondary-image{% endif %}">
+        {% include '__product-image' %}
+      </div>
+    {% endif %}
+    {% if template contains 'index' and settings.homepage-product-layout == 'tile-layout' %} 
+    <a href="{{ product-loop.url }}">
+    <div class="details">
+      {% if settings.show-vendor-with-thumbnail == 'above-product-title' %}<div class="product-vendor">{{ product-loop.vendor }}</div>{% endif %}
+      <h4 class="product-title">{{ product-loop.title }}</h4>
+      {% if settings.show-vendor-with-thumbnail == 'below-product-title' %}<div class="product-vendor">{{ product-loop.vendor }}</div>{% endif %}
+      <div class="shopify-product-reviews-badge" data-id="{{ product-loop.id }}"></div>
+      {% if has_prices and product-loop.price > 0 %}
+      <div class="product-price">
+        {% if settings.show-compare-at-price and product-loop.compare_at_price > 0 %} 
+        {% capture was %}
+        {% include '__localize' with 'was' %}
+        <span class="money">
+          {% if settings.show-currency-with-prices == "with-currency" %}
+          {{ product-loop.compare_at_price_max | money_with_currency }}
+          {% else %}
+          {{ product-loop.compare_at_price_max | money }}
+          {% endif %}
+        </span>
+        {% endcapture %}
+        <small class="text-muted"><del>{{ was | strip }}</del></small>&nbsp;
+        {% elsif product-loop.price_varies %}
+        <small class="text-muted">
+          {% include '__localize' with 'from' %}
+        </small>
+        {% endif %}
+
+        {% include '__poa-tag' with product-loop %}
+        {% if price_is_poa %}
+        <span>{% include '__localize' with 'POA' %}</span>
+        {% else %}
+        {% include 'product-price' with product-loop.price %}
+        {% endif %}
+        {% include 'product-labels' with product-loop %}
+      </div>
+      {% endif %}
+      
+    </div>
+    </a>  
+    {% else %}
+
+    <a href="{{ product-loop.url }}" class="caption clearfix">
+      <h4 class="product-title">{{ product-loop.title }}</h4>
+      {% if settings.show-vendor-with-thumbnail == 'below-product-title' %}<div class="product-vendor">{{ product-loop.vendor }}</div>{% endif %}
+      <div class="shopify-product-reviews-badge" data-id="{{ product-loop.id }}"></div>
+      {% if has_prices and product-loop.price > 0 %}
+      <div class="product-price">
+        {% if settings.show-compare-at-price and product-loop.compare_at_price > 0 %} 
+        {% capture was %}
+        {% include '__localize' with 'was' %}
+        <span class="money">
+          {% if settings.show-currency-with-prices == "with-currency" %}
+          {{ product-loop.compare_at_price_max | money_with_currency }}
+          {% else %}
+          {{ product-loop.compare_at_price_max | money }}
+          {% endif %}
+        </span>
+        {% endcapture %}
+        <small class="text-muted"><del>{{ was | strip }}</del></small>&nbsp;
+        {% elsif product-loop.price_varies %}
+        <small class="text-muted">
+          {% include '__localize' with 'from' %}
+        </small>
+        {% endif %}
+
+        {% include '__poa-tag' with product-loop %}
+        {% if price_is_poa %}
+        <span>{% include '__localize' with 'POA' %}</span>
+        {% else %}
+        {% include 'product-price' with product-loop.price %}
+        {% endif %}
+        {% include 'product-labels' with product-loop %}
+      </div>
+      {% endif %}
+      
+    </a>
+    {% endif %}
+    {% unless settings.yotpo-api-key == blank %}
+    <div class="yotpo bottomLine"
+         data-appkey="{{ settings.yotpo-api-key }}"
+         data-domain="{{ shop.permanent_domain | escape }}"
+         data-product-id="{{ product-loop.id }}"
+         data-product-models="{{ product-loop.id }}"
+         data-name="{{ product-loop.title | escape }}"
+         data-url="{{ page.url }}"
+         data-image-url="{{ product-loop.featured_image | product_img_url: "large" |replace: '?', '%3F' | replace: '&','%26'}}"
+         data-description="{{ product-loop.description | escape }}"
+         data-bread-crumbs="{% for tag in product-loop.tags %}{{ tag | escape }};{% endfor %}">
+    </div>
+    {% endunless %}
+
+    {% if settings.show-stock-availability-on-collection %}
+    <div class="product-deal">
+      <div class="product-availability">
+        {% include 'product-availability' with product-loop %}
+      </div>
+      {% if product-loop.metafields.inventory.ShappifySaleEndDate %}
+      <div class="sale-clock">
+        {% include 'shappify-sales-clock' with product-loop %}
+      </div>
+      {% endif %}
+    </div>
+    {% endif %}
+    {% if settings.quick-cart %}
+    <div class="quick-cart">
+      <div class="quick-cart-btn-wrapper">
+        <a href="{{ product_url }}" class="quick-cart-btn view">
+          {% if settings.collection-btn-icons %}
+          <i class="fa fa-search fa-fw"></i>
+          {% else %}
+          {% include '__localize' with 'View product' %}
+          {% endif %}
+        </a>
+      </div>
+      <div class="quick-cart-btn-wrapper">
+        {% if product-loop.variants.size > 1 %}
+        <a href="{{ product_url }}" class="quick-cart-btn add-to-cart">
+          {% if settings.collection-btn-icons %}
+          <i class="fa fa-cart-plus fa-fw"></i>
+          {% else %}
+          {% include '__localize' with 'Add to cart' %}
+          {% endif %}
+        </a>
+        {% else %}
+        {% assign c_sum = 0.0 %}
+        {% for v in product-loop.variants %}
+        {% if v.price > 0 %}
+        {% assign c_sum = c_sum | plus: v.price %}
+        {% endif %}
+        {% endfor %}
+
+        {% if c_sum > 0 %}
+        {% unless product-loop.template_suffix == 'quantity-limit' or product-loop.template_suffix == 'quantity-limit-1' or product-loop.template_suffix == 'quantity-limit-2' or product-loop.template_suffix == 'quantity-limit-3' or product-loop.template_suffix == 'quantity-limit-4' %}
+        <form id="{% include '__advanced-layout-id' with 'product-form' %}" action="/cart/add" method="post" role="form" enctype="multipart/form-data">
+          <input type="hidden" name="id" value="{{ product-loop.selected_or_first_available_variant.id }}" />
+          <input type="hidden" name="quantity" value="1" />
+          <button type="submit" name="add" id="purchase" class="quick-cart-btn add-to-cart">
+            {% if settings.collection-btn-icons %}
+            <i class="fa fa-cart-plus fa-fw"></i>
+            {% else %}
+            {% include '__localize' with 'Add to cart' %}
+            {% endif %}
+          </button>
+        </form>
+        {% endunless %}
+        {% endif %}           
+        {% endif %}
+      </div>
+    </div>
+    {% endif %}
+    {% if settings.quick-shop %}
+    <button type="button" class="btn btn-primary btn-block quick-shop-toggle" data-toggle="modal" data-target="#quick_shop_modal" data-handle="{{product-loop.handle}}">Quick Shop</button>
+    {% endif %}
+  </div>
+</div>

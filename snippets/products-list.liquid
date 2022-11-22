@@ -1,0 +1,263 @@
+{% if template contains 'index' and settings.homepage-product-layout == 'tile-layout' %}
+	<div class="grid-wrapper ">
+		{% if template contains 'index' %}
+			{% if t_object != blank %}
+				{% assign product_collection = t_object %}
+	  		{% elsif products-list != blank %}
+	 			 {% assign product_collection = products-list %}
+			{% else %}
+				{% assign product_collection = collections[settings.homepage-products-collection] %}
+			{% endif %}
+		{% elsif collection %}
+			{% assign product_collection = collection %}
+		{% endif %}
+		{% if template contains 'index' or products-list == 'limit' %}
+		  {% if settings.homepage-products-limit contains 'unlimited' %}{% assign limit = nil %}{% else %}{% assign limit = settings.homepage-products-limit %}{% endif %}
+		{% endif %}
+		{% for p in product_collection.products | limit: limit %}
+			{% assign product_count = forloop.length %}
+			{% include 'product-loop' with p %}
+		{% endfor %}
+	</div>
+{% endif %}
+{% if template contains 'index' and  settings.homepage-product-layout == 'grid-layout' %}
+	<div class="row{% if thumbnail_layout == 'masonry' %} masonry-collection{% endif %}">
+		<div class="container">
+			{% if template contains 'index' %}
+				{% if t_object != blank %}
+					{% assign product_collection = t_object %}
+		  		{% elsif products-list != blank %}
+		 			 {% assign product_collection = products-list %}
+				{% else %}
+					{% assign product_collection = collections[settings.homepage-products-collection] %}
+				{% endif %}
+			{% elsif collection %}
+				{% assign product_collection = collection %}
+			{% endif %}
+			{% if template contains 'index' or products-list == 'limit' %}
+			  {% if settings.homepage-products-limit contains 'unlimited' %}{% assign limit = nil %}{% else %}{% assign limit = settings.homepage-products-limit %}{% endif %}
+			{% endif %}
+			{% for p in product_collection.products | limit: limit %}
+				{% assign product_count = forloop.length %}
+				{% include 'product-loop' with p %}
+			{% endfor %}
+		</div>
+	</div>
+{% endif %}
+{% if template contains 'index' and settings.homepage-product-layout == 'lifestyle-layout'  %}
+	<div class="lifestyle-wrapper">
+
+			<div class="lifestyle-img col-sm-12 col-md-6 adsfasdfasdfafsd">
+				<img src="{{ 'life-style-img.jpg' | asset_url }}">
+			</div>
+			<div class="col-sm-12 col-md-6 asdfasdf">
+				{% if template contains 'index' %}
+					{% if t_object != blank %}
+						{% assign product_collection = t_object %}
+			  		{% elsif products-list != blank %}
+			 			 {% assign product_collection = products-list %}
+					{% else %}
+						{% assign product_collection = collections[settings.homepage-products-collection] %}
+					{% endif %}
+				{% elsif collection %}
+					{% assign product_collection = collection %}
+				{% endif %}
+				{% if template contains 'index' or products-list == 'limit' %}
+				  {% if settings.homepage-products-limit contains 'unlimited' %}{% assign limit = nil %}{% else %}{% assign limit = settings.homepage-products-limit %}{% endif %}
+				{% endif %}
+				{% for p in product_collection.products | limit: 4 %}
+					{% assign product_count = forloop.length %}
+					{% include 'product-loop' with p %}
+				{% endfor %}
+			</div>
+
+	</div>
+{% endif %}
+
+{% if template contains 'index' and settings.homepage-product-layout == 'lifestyle-showcase-layout' %}
+	<div class="lifestyle-showcase-wrapper">
+
+			<div class="col-sm-12 col-md-6 asdfasdf">
+				<div class="product-one-wrap product-wrap">
+					<a href="{{ settings.product-one-link }}">
+						<img src="{{ 'product-one-image.jpg' | asset_url | 'master' }}" alt="">
+						<div class="product-info">
+							<div class="product-content">
+								<h3>{{ settings.product-one-title }}</h3>
+								<p>{{ settings.product-one-description }}</p>	
+							</div>
+							<div class="shop-now">
+								<span>Shop Now <i class="fa fa-chevron-right"></i></span>
+							</div>
+						</div>
+					</a>
+				</div>
+				<div class="product-two-wrap product-wrap">
+					<a href="{{ settings.product-two-link }}">
+						<img src="{{ 'product-two-image.jpg' | asset_url | 'master' }}" alt="">
+						<div class="product-info">
+							<div class="product-content">
+								<h3>{{ settings.product-two-title }}</h3>
+								<p>{{ settings.product-two-description }}</p>	
+							</div>
+							<div class="shop-now">
+								<span>Shop Now <i class="fa fa-chevron-right"></i></span>
+							</div>
+						</div>
+					</a>
+				</div>
+			</div>
+			<div class="col-sm-12 col-md-6 asdfasdfasdf">
+				<div class="product-three-wrap product-wrap">
+					<a href="{{ settings.product-three-link }}">
+						<img src="{{ 'product-three-image.jpg' | asset_url | 'master' }}" alt="">
+						<div class="product-info">
+							<div class="product-content">
+								<h3>{{ settings.product-three-title }}</h3>
+								<p>{{ settings.product-three-description }}</p>	
+							</div>
+							<div class="shop-now">
+								<span>Shop Now <i class="fa fa-chevron-right"></i></span>
+							</div>
+						</div>
+					</a>
+				</div>
+				<div class="product-four-wrap product-wrap">
+					<a href="{{ settings.product-four-link }}">
+						<img src="{{ 'product-four-image.jpg' | asset_url | 'master' }}" alt="">
+						<div class="product-info">
+							<div class="product-content">
+								<h3>{{ settings.product-four-title }}</h3>
+								<p>{{ settings.product-four-description }}</p>	
+							</div>
+							<div class="shop-now">
+								<span>Shop Now <i class="fa fa-chevron-right"></i></span>
+							</div>
+						</div>
+					</a>
+				</div>
+			</div>
+	
+	</div>
+{% endif %}
+{% if template contains 'tabs-template' %}
+
+	<script>
+		$( document ).ready(function() {
+			$( ".nav-item" ).first().addClass("active");
+			$( ".tab-pane" ).first().addClass("active");
+		    $(".nav-tabs a").click(function(){
+		    	event.preventDefault();
+		    	// $(".tab-content").find( ".tab-pane" ).addClass("active");
+		        $(this).tab('show').fadeIn();
+		    });
+		});
+	</script>
+	<div class="tabs-collection-wrapper">
+		
+	
+		<ul class="nav nav-tabs">
+			{% for product in collection.products %}
+			  <li class="nav-item">
+			    <a class="nav-link" href="#{{ product.id }}">{{ product.title }}</a>
+			  </li>
+			{% endfor %}
+		</ul>
+		<div class="tab-content" id="myTabContent">
+		
+		{% for product in collection.products %}
+		  <div class="tab-pane clearfix" id="{{ product.id }}" role="tabpanel">
+			 <div class="col-sm-12 col-md-6 qweqwrqwereqwr">
+		      <div class="row product-images">
+		        <div class="col-xs-12 col-sm-12">
+		          <div class="thumbnail product-main-image qwdwqdq">
+		            <img src="{{ product.images[0] | img_url: 'master' }}" alt="">
+		          </div>
+		        </div>
+		        {% if product.images.size > 1 %}
+		        {% for image in product.images %}
+		        <div class="{% if template contains 'fullwidth-thumbnails' %}col-xs-12 {% else %} col-xs-4 {% endif %}">
+		          <div class="thumbnail">
+		            <div class="thumbnail-image product-main-thumb">
+		              <a href="#" data-main-image="{{ image.src | product_img_url: 'master' }}">
+		                {{ image.src | product_img_url: 'master' | img_tag: image.alt }}
+		              </a>
+		            </div>
+		          </div>
+		        </div>
+		        {% endfor %}
+		        {% endif %}
+		      </div>
+			 </div>
+			 <div class="col-sm-12 col-md-6 zxvzxvzxcvxzcv">
+			 	<div class="product-details">
+				 	<h4 class="product-title">{{ product.title }}</h4>
+				 	
+				      <div class="product-price">
+				        {% if settings.show-compare-at-price and product.compare_at_price > 0 %}	
+				        {% capture was %}
+				        {% include '__localize' with 'was' %}
+				        <span class="money">
+				          {% if settings.show-currency-with-prices == "with-currency" %}
+				          {{ product.compare_at_price_max | money_with_currency }}
+				          {% else %}
+				          {{ product.compare_at_price_max | money }}
+				          {% endif %}
+				        </span>
+				        {% endcapture %}
+				        <small class="text-muted"><del>{{ was | strip }}</del></small>&nbsp;
+				        {% elsif product.price_varies %}
+				        <small class="text-muted">
+				          {% include '__localize' with 'from' %}
+				        </small>
+				        {% endif %}
+
+				        {% include '__poa-tag' with product %}
+				        {% if price_is_poa %}
+				        <span>{% include '__localize' with 'POA' %}</span>
+				        {% else %}
+				        {% include 'product-price' with product.price %}
+				        {% endif %}
+				        {% include 'product-labels' with product %}
+				      </div>
+					{% include 'product-add-to-cart-form' %}
+					{% include 'product-description' %}
+			 	</div>
+
+			 </div>
+
+		  </div>
+			
+		{% endfor %}
+		</div>
+	</div>
+{% endif %}
+{% if template contains 'index' or template contains 'tabs-template' %}
+
+{% else %}
+
+	<div class="row{% if thumbnail_layout == 'masonry' %} masonry-collection{% endif %}">
+		<div class="container">
+			{% if template contains 'index' %}
+				{% if t_object != blank %}
+					{% assign product_collection = t_object %}
+		  		{% elsif products-list != blank %}
+		 			 {% assign product_collection = products-list %}
+				{% else %}
+					{% assign product_collection = collections[settings.homepage-products-collection] %}
+				{% endif %}
+			{% elsif collection %}
+				{% assign product_collection = collection %}
+			{% endif %}
+			{% if template contains 'index' or products-list == 'limit' %}
+			  {% if settings.homepage-products-limit contains 'unlimited' %}{% assign limit = nil %}{% else %}{% assign limit = settings.homepage-products-limit %}{% endif %}
+			{% endif %}
+			{% for p in product_collection.products | limit: limit %}
+				{% assign product_count = forloop.length %}
+				{% include 'product-loop' with p %}
+			{% endfor %}
+		</div>
+	</div>
+
+
+{% endif %}

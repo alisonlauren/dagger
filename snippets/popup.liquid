@@ -1,0 +1,96 @@
+{% if settings.popup-enable %}
+  {% unless customer and settings.popup-hide-account-holders %}
+    <div id="boxes">
+        <div id="dialog" class="window col-xs-11 col-sm-8 col-md-8 col-lg-6">
+            <!--    PROMO IMAGE      -->
+            {% if settings.popup-enable-image %}
+              <div class="popup-image-wrapper col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                <img class="popup-image" src="{{ 'popup-image-file.png' | asset_url }}">
+              </div>
+            {% endif %}
+
+            <!--      PROMOTIONAL MESSAGE        -->
+            {% if settings.popup-message %}
+              <div class="promo-message-wrapper col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                  <h1 id="promo-message"> {{ settings.popup-message }}</h1>          
+              </div>
+            {% endif %}
+
+            <!--      PROMOTIONAL MESSAGE        -->
+            {% if settings.popup-message %}
+              <div class="promo-message-secondary-wrapper col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                  <p id="promo-message-secondary"> {{ settings.popup-message-secondary }}</p>          
+              </div>
+            {% endif %}
+
+
+            <!--      DISCOUNT CODE        -->
+            {% if settings.popup-enable-discount %}
+                <div class="promo-discount-wrapper col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                  <h2>
+                    Your Code: {{ settings.popup-discount-code }}
+                  </h2>
+                </div>
+            {% endif %}
+            <!--      NEWSLETTER       -->
+            {%if settings.popup-enable-newsletter %}
+              <!--    CUSTOM    -->	
+              {%if settings.popup-enable-custom-newsletter %}
+                {{ settings.popup-custom-newsletter }}
+              <!--    DEFAULT      -->
+              {% else %}
+                <div class="promo-newsletter-wrapper col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                  <div class="promo-newsletter-message">
+                    <h2> {{ settings.popup-newsletter-message }} </h2>
+                  </div>
+                  {% include 'newsletter-signup-form' %}
+                </div>
+              {% endif %}
+            {% endif %}
+            <!--      PROMOTIONAL MESSAGE        -->
+            {% if settings.popup-disclaimer %}
+              <div class="promo-disclaimer-wrapper col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                  <p id="promo-disclaimer"> <small>{{ settings.popup-disclaimer }}</small></p>          
+              </div>
+            {% endif %}        
+            <a href="#" class="close">X</a>
+        </div>
+        <div id="mask"></div>
+    </div>
+
+    <!-- Dates For Popup Debut -->
+    <div id="promo-start-date" style="display: none !important; opacity: 0; visibility: hidden;">
+      <div id="promo-start-year"> {{ settings.popup-start-year }} </div> 
+      <div id="promo-start-month"> {{ settings.popup-start-month }} </div>
+      <div id="promo-start-day"> {{ settings.popup-start-day }} </div>
+    </div>
+
+    <!-- DO NOT REMOVE THIS SCRIPT TAG     -->
+    <script>
+      // This sets global variables which are used by popup.js
+      // functionality will break if these are removed
+      {% if settings.popup-enable-start-date %}
+        popupStartDateEnabled = true;
+      {%else%}
+        popupStartDateEnabled = false;
+      {% endif %}   
+      {% if settings.popup-enable-cookies %}
+        popupCookiesEnabled = true;
+      {% else %}
+        popupCookiesEnabled = false;
+      {% endif %}
+      {% if settings.popup-cookie-duration%}
+          cookie_days = {{ settings.popup-cookie-duration }};
+      {%else%}
+          cookie_days = 30;
+      {% endif %}
+    </script>
+
+    {{ 'popup.js' | asset_url | script_tag }}
+
+    <style>
+      {{ settings.additional-css }}
+    </style>
+  {% endunless %}
+{% endif %}
+        

@@ -1,0 +1,16 @@
+{% assign shopcurrency = shop.permanent_domain %}
+
+<div id="currency-selector">
+  <a class="tmb-currency {% if shopcurrency contains 'uk' %}currency_current{% endif %}" href="https://dagger-records-uk.myshopify.com/"><i class="fa fa-gbp"></i></a>
+  <a class="tmb-currency {% if shopcurrency contains 'us' %}currency_current{% endif %}" href="https://dagger-records-us.myshopify.com/"><i class="fa fa-usd"></i></a>
+</div>
+
+<style>
+  #currency-selector {
+    float: left;
+    margin-top: 15px;
+  }
+  #currency-selector a {
+      margin: 0 10px;
+  }
+</style>

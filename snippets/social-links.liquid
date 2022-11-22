@@ -1,0 +1,55 @@
+    <a href="https://www.facebook.com/JimiHendrix/" title="facebook" class="facebook" target="_blank">
+      <i class="fa fa-facebook fa-fw "></i>
+    </a>
+
+    
+    <a href="https://twitter.com/jimihendrix" title="twitter" class="twitter" target="_blank">
+      <i class="fa fa-twitter fa-fw "></i>
+    </a>
+    
+    
+    <a href="https://www.youtube.com/jimihendrix" title="youtube" class="youtube" target="_blank">
+      <i class="fa fa-youtube-play"></i>
+    </a>
+    
+  <a href="https://www.instagram.com/jimihendrix/" title="youtube" class="instagram" target="_blank">
+    <i class="fa fa-instagram"></i>
+  </a>
+
+
+    {% comment %}
+
+{% assign social_links = 'amazon apple dribbble email facebook flickr foursquare github google google-plus instagram linkedin pinterest rss skype soundcloud spotify stack-exchange stack-overflow tumblr twitter vimeo youtube' | split: ' ' %}
+{% for link in social_links %}
+  {% assign social_link = link | prepend: 'social-links-' %}
+  {% unless settings[social_link] == blank %}
+    {% assign link_href = settings[social_link] %}
+    {% assign icon = link %}
+
+    {% case link %}
+    {% when 'email' %}
+      {% assign link_href = settings[social_link] | prepend: 'mailto:' %}
+      {% assign icon = 'envelope' %}
+    {% when 'rss' %}
+      {% assign blog_rss = settings[social_link] %}
+      {% if blogs[blog_rss].url != blank %}
+        {% assign link_href = blogs[blog_rss].url | append: '.atom' %}
+      {% else %}
+        {% assign link_href = '' %}
+      {% endif %}
+    {% when 'vimeo' %}
+      {% assign icon = icon | append: '-square' %}
+    {% endcase %}
+
+
+
+
+    {% if link_href != blank %}
+    <a href="{{ link_href }}" title="{{ link }}" class="{{ link }}" target="_blank">
+    	<i class="fa fa-{{ icon }} fa-fw {% if social-links %}fa-{{ social-links }}{% endif %}"></i>
+    </a>
+    {% endif %}
+
+  {% endunless %}
+{% endfor %}
+    {% endcomment %}

@@ -1,0 +1,65 @@
+<footer id="footer-content" class="footer">
+  {% if settings.footer_template == 'OLM' or settings.footer_template == 'Manhead' %}
+    <div class="container">
+      {% if has_footer %}      
+      {% assign cols = '' %}
+      {% for i in (i..3) %}
+      {% assign c = i | plus: 1 %}
+      {% assign col = 'column-' | append: c %}
+      {% assign col_blog = col | append: '-blog' %}
+      {% assign col_menu = col | append: '-menu' %}
+      {% assign col_text = col | append: '-text' %}
+
+      {% if settings[col_blog] != blank or settings[col_menu] != blank or settings[col_text] != blank or settings.newsletter-signup-placement contains col or settings.social-footer-column-1 or settings.social-footer-column-2 or settings.social-footer-column-3 or settings.social-footer-column-4 %}
+      {% assign cols = cols | append: col | append: '|' %}
+      {% endif %}
+      {% endfor %}
+      {% assign footer_columns = cols | split: '|' %}
+
+      <div class="row">
+        {% for footer_column in footer_columns %}
+        {% include 'footer-column-loop' %}
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      <p class="text-center footer-credits">
+        <small>
+          &copy;{{ 'now' | date: '%Y' }}&nbsp;<a href="/" title="{{ shop.name }} {% include '__localize' with 'homepage' %}">{{ shop.name | replace: ' ', '&nbsp;' }}</a>. <br class="visible-sm">
+          Powered&nbsp;by&nbsp;<a href="{{ settings.footer_powered_by_hyperlink }}" target="_blank">{{ settings.footer_powered_by_title }}</a>.
+        </small>
+      </p>
+
+      {% if settings.footer_template == 'OLM' %}
+        {% capture onelive_logo_src %}{{ settings.onelive-logo-color | prepend: 'onelive-' | append: '.png' }}{% endcapture %}   
+        <p class="onelive">
+          <a href="http://www.onelivemedia.com" target="_blank">
+            <img src="{{ onelive_logo_src | asset_url }}" alt="ONELIVE" class="img-responsive center-block" />
+          </a>
+        </p>
+      {% endif %}
+
+    </div>
+  {% endif %}
+
+  {% if settings.footer_template == 'standard'%}
+      <div class="text-center footer-credits" style="margin-bottom: 30px;">
+          <div class="footer-images">
+            <img src="{{ 'logo-dagger-records-300x182.png' | asset_url }}" alt="">
+            <img src="{{ 'logo-experience-hendrix.png' | asset_url }}" alt="">
+            <img src="{{ 'logo-authentic-hendrix.png' | asset_url }}" alt="">
+            <img src="{{ 'logo-jimi-hendrix-signature-300x79.png' | asset_url }}" alt="">
+          </div>
+          {% for link in linklists.footer.links %}
+              <a class="footer-links" href="{{ link.url }}">{{ link.title }}</a>
+          {% endfor %}     
+          <br> 
+          <small>
+            &copy;{{ 'now' | date: '%Y' }}&nbsp;<a href="/" title="{{ shop.name }} {% include '__localize' with 'homepage' %}">{{ shop.name | replace: ' ', '&nbsp;' }}</a>. <br class="visible-sm">
+            Powered&nbsp;by&nbsp;<a href="{{ settings.footer_powered_by_hyperlink }}" target="_blank">{{ settings.footer_powered_by_title }}</a>.
+          </small>
+      </div>
+  {% endif %}
+  
+  {% if has_footer_navbar %}{% include 'navbar' with 'footer' %}{% endif %}
+</footer>

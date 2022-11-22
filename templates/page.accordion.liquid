@@ -1,0 +1,55 @@
+{% include 'theme-variables' %}
+<section id="page-wrap" class="section-wrap">
+{% include '__containers-open' %}
+<h1 class="page-header">{{ page_title }}</h1>
+{% include '__formatted-content' with page.content %}
+{% include '__containers-close' %}
+</section>
+<style>
+/* Styles for Accordion */
+.toggle:last-child {
+border-bottom: 1px solid #dddddd;
+}
+.toggle .toggle-title {
+position: relative;
+display: block;
+border-top: 1px solid #dddddd;
+margin-bottom: 6px;
+}
+.toggle .toggle-title h3 {
+font-size: 20px;
+margin: 0px;
+line-height: 1;
+cursor: pointer;
+font-weight: 200;
+}
+.toggle .toggle-inner {
+padding: 7px 25px 10px 25px;
+display: none;
+margin: -7px 0 6px;
+}
+.toggle .toggle-inner div {
+max-width: 100%;
+}
+.toggle .toggle-title .title-name {
+display: block;
+padding: 25px 25px 14px;
+}
+.toggle .toggle-title a i {
+font-size: 22px;
+margin-right: 5px;
+}
+</style>
+<script>
+
+if( jQuery(".toggle .toggle-title").hasClass('active') ){
+		jQuery(".toggle .toggle-title.active").closest('.toggle').find('.toggle-inner').show();
+	}
+	jQuery(".toggle .toggle-title").click(function(){
+		if( jQuery(this).hasClass('active') ){
+			jQuery(this).removeClass("active").closest('.toggle').find('.toggle-inner').slideUp(200);
+		}
+		else{	jQuery(this).addClass("active").closest('.toggle').find('.toggle-inner').slideDown(200);
+		}
+	});
+</script>

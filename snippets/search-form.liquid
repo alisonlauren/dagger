@@ -1,0 +1,11 @@
+{% comment %}{% if settings.search-placement != 'sidebar' %}
+<li><a href="#" class="search-toggle"><i class="fa fa-search"></i></a></li>
+{% endif %}
+<form {% if settings.search-placement != 'sidebar' %}class="search-form navbar-form"{% endif %} action="/search">
+  <div class="input-group">
+    <input type="search" name="q" class="form-control search-bar" autocomplete="off" placeholder="{{ 'navigation.search.search-form-placeholder' | t }}" value="{{ search.terms }}">
+    <span class="input-group-btn">
+      <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i></button>
+    </span>
+  </div>
+</form>{% endcomment %}

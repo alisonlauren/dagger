@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    {% include 'meta' %}
+
+    <link rel="shortcut icon" href="{{ 'favicon.png' | asset_url }}" type="image/png" />
+    {{ '_base.scss.css' | asset_url | stylesheet_tag }}
+    {{ 'custom.scss.css' | asset_url | stylesheet_tag }}
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet">
+
+
+    {{ '//cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js' | script_tag }}
+    {{ 'jquery.min.js' | asset_url | script_tag }}
+    {{ '//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore-min.js' | script_tag }}
+    {{ 'visibility.js' | asset_url | script_tag }}
+    {{ 'sticky.js' | asset_url | script_tag }}
+
+	<!--[if lt IE 9]>
+	<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+	{% assign respond_js_secret_key = (shop.domain | md5) %}
+	{{ 'respond.min.js' | asset_url | script_tag }}
+	<link href="{{ 'respond-proxy.html' | asset_url | split: '?' | first }}" id="respond-proxy" rel="respond-proxy" />
+	<link href="{{ shop.url }}/search?q={{ respond_js_secret_key }}" id="respond-redirect" rel="respond-redirect" />
+	<script src="{{ shop.url }}/search?q={{ respond_js_secret_key }}" type="text/javascript"></script>
+	<![endif]-->
+
+    {{ 'api.jquery.js' | shopify_asset_url | script_tag }}
+    {{ 'option_selection.js' | shopify_asset_url | script_tag }}
+    {{ 'bootstrapify-option-selection.min.js' | asset_url | script_tag }}
+
+    {% if template contains 'customers' %}
+    {{ "shopify_common.js" | shopify_asset_url | script_tag }}
+    {{ "customer_area.js"  | shopify_asset_url | script_tag }}
+    {% endif %}
+
+    {% if settings.custom-header-code != '' %}
+    {{ settings.custom-header-code }}
+    {% endif %}
+
+    {{ content_for_header }}
+
+    {% include 'theme-script-variables' %}
+    {% include 'theme-variables' %}
+
+    {% unless settings.yotpo-api-key == blank %}
+    <script type="text/javascript">
+      (function e(){var e=document.createElement("script");e.type="text/javascript",e.async=true,e.src="//staticw2.yotpo.com/{{ settings.yotpo-api-key }}/widget.js";var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t)})();
+    </script>  
+    {% endunless %}
+    
+    {% if paginate.previous %}
+    <link rel="prev" href="{{ shop.url }}{{ paginate.previous.url }}/" />
+    {% endif %}
+    {% if paginate.next %}
+    <link rel="next" href="{{ shop.url }}{{ paginate.next.url }}/" />
+    {% endif %}
+    {% if paginate.current_page == 1 %}
+    <link rel="canonical" href="{{ shop.url }}{{ collection.url }}/" />
+    {% else %}
+    <link rel="canonical" href="{{ shop.url }}{{ collection.url }}?page={{ paginate.current_page }}/" />
+    {% endif %}
+  </head>
+
+  <!--[if IE]><body class="{% include '__body-classes' %} ie"> <![endif]-->
+  <!--[if !(IE)]><!--> <body class="{% include '__body-classes' %}"> <!--<![endif]-->
+    {% unless settings.gtm-container-id == blank %}
+		<!-- Google Tag Manager -->
+		<noscript><iframe src="//www.googletagmanager.com/ns.html?id={{ settings.gtm-container-id }}"
+						height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+		<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+															new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+		j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+		  '//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+								  })(window,document,'script','dataLayer','{{ settings.gtm-container-id }}');</script>
+		<!-- End Google Tag Manager -->
+	{% endunless %}  
+
+  <!-- Add this above the wrap on theme.liquid -->
+  {% if template == 'index' %}
+    {% include 'popup' %}  
+  {% endif %}  
+  
+
+
+  <div id="wrap">
+    {% if settings.logo-placement == "above-top-navbar" %}{% include 'brand' %}{% endif %}
+    {% include 'navbar' with 'top' %}
+
+    {% if settings.cta-banner-enable %}
+
+
+    {% endif %}
+    {% if template contains 'index' and settings.slider-type == 'bleed-slider' %}
+        <div class="bleed-carousel">
+          {% include 'slider' %}
+        </div>
+    {% endif %}
+    <div id="content" class="tile-wrap">
+
+      {% if settings.logo-placement == "above-main-content" %}{% include 'brand' %}{% endif %}
+      {% if has_main_menu %}
+      <div class="container">
+        {% include 'navbar' with 'main' %}
+      </div>
+      {% endif %}
+
+      {% if settings.slider-type == 'normal-slider' %}
+      {% if settings.slider-width == "window-width" and template == "index" %}{% include 'slider' %}{% elsif settings.slider-width == "window-width" %}{% include 'banner' %}{% endif %}
+      {% endif %}
+
+      
+      {% if settings.slider-width != "window-width" or settings.show-breadcrumbs %}
+        {% if settings.slider-type == 'normal-slider' %}
+        <div class="container">
+          {% if settings.slider-width == "site-width" and template == "index" %}{% include 'slider' %}{% elsif settings.slider-width == "site-width" %}{% include 'banner' %}{% endif %}
+          {% if settings.show-breadcrumbs and template != 'index' %}{% include 'breadcrumbs' %}{% endif %}
+        </div>
+        {% endif %}
+      {% endif %}
+
+      {% if has_sidebar and settings[sidebar_template] %}
+      {% unless has_window_width_thumbnail_container %}<div class="container"><div class="row">{% endunless %}
+      <div class="main-content {% include '__main-span' %}">
+        {% endif %}
+        {% if settings.slider-type == 'normal-slider' %}
+          {% if settings.slider-width == "main-content-width" and template == "index" %}{% include 'slider' %}{% elsif settings.slider-width == "main-content-width" %}{% include 'banner' %}{% endif %}
+        {% endif %}
+        {{ content_for_layout }}
+
+        {% if has_sidebar and settings[sidebar_template] %}
+      </div>
+      {% include 'sidebar' %}
+      {% unless has_window_width_thumbnail_container %}</div></div>{% endunless %}
+      {% endif %}
+    </div>
+    {% include 'footer' %}
+  </div>
+
+  {% if settings.quick-shop %}
+  {% include 'quick-shop' %}
+  {% endif %}  
+
+  {% include 'option-select-callback' %}
+  {% include 'currencies' %}
+  {{ '_base.js' | asset_url | script_tag }}
+  {{ 'jquery.ajax-cart.min.js' | asset_url | script_tag }}
+  {{ 'jquery.uniform_thumbnails.min.js' | asset_url | script_tag }}
+  {{ 'jquery.orderly.min.js' | asset_url | script_tag }}
+  {{ 'isotope.pkgd.min.js' | asset_url | script_tag }}
+  {{ 'transition.js' | asset_url | script_tag }}
+  {{ 'button.js' | asset_url | script_tag }}
+  {{ 'carousel.js' | asset_url | script_tag }}
+  {{ 'collapse.js' | asset_url | script_tag }}
+  {{ 'dropdown.js' | asset_url | script_tag }}
+  {{ 'modal.js' | asset_url | script_tag }}
+  {{ 'tab.js' | asset_url | script_tag }}
+  {{ 'tooltip.js' | asset_url | script_tag }}
+  {{ 'popover.js' | asset_url | script_tag }}
+  {{ 'typeahead.js' | asset_url | script_tag }}
+  {{ 'jquery.instagram.min.js' | asset_url | script_tag }}
+  {{ 'jquery.mobile.custom.js' | asset_url | script_tag }}
+  {% if settings.enable-image-zoom %}{{ 'jquery.zoom.min.js' | asset_url | script_tag }}{% endif %}
+  {% if settings.enable-image-lightbox %}{{ 'jquery.colorbox-min.js' | asset_url | script_tag }}{% endif %}
+  {% if settings.enable-age-verification %}{% include 'age-check' %}{% endif %}
+
+  {% if settings.custom-footer-code != '' %}
+  {{ settings.custom-footer-code }}
+  {% endif %}
+
+  <script type="text/javascript">
+    $("#myCarousel").swiperight(function() {  
+      $(this).carousel('prev');  
+    });  
+    $("#myCarousel").swipeleft(function() {  
+      $(this).carousel('next');  
+    });  
+    {% unless current_handle == blank %}
+    $('.handle_{{ current_handle }}').parents('.collapse').addClass('in');
+      {% endunless %}
+
+      {% if settings.instagram-feed and settings.instagram-client-id != blank %}
+      if(instagramThumbnailClass === undefined){
+      var instagramThumbnailClass = "{% include '__thumbnail-span' %}";
+    }
+    $(function(){
+      $('#instagram-widget').bootstrapifyInstagram({
+        thumbClass: instagramThumbnailClass
+      });
+    });
+    {% endif %}
+
+    {% if thumbnail_layout == 'masonry' %}
+    var $container = $('.masonry-collection').imagesLoaded(function(){
+      $container.isotope({
+        itemSelector: '.masonry',
+        layoutMode: 'masonry'
+      });
+
+      $('.product-main-thumb').orderly();
+    });
+    {% else %}
+    if(uniformThumbnailElements === undefined){
+      var uniformThumbnailElements = '.thumbnail-image a, .product-main-thumb a';
+    }
+
+    var uniformThumbnailsOpts = {};
+    {% if settings.thumbnail-alignment != blank %} uniformThumbnailsOpts.align = '{{ settings.thumbnail-alignment }}'; {% endif %}
+    {% if settings.thumbnail-ratio != blank %} uniformThumbnailsOpts.ratio = '{{ settings.thumbnail-ratio }}'; {% endif %}
+    {% if settings.thumbnails-cropped == blank %} uniformThumbnailsOpts.fit = 'scale'; {% endif %}
+    $(uniformThumbnailElements).uniform_thumbnails(uniformThumbnailsOpts).on('ut_complete', function(){
+      //$('.collection-thumbnail .caption').orderly({ method: 'children' });
+      //$('.product-thumbnail .caption').orderly({ method: 'children' });
+      $('.row').find('.caption').orderly({ method: 'children' });
+    });
+    {% endif %}
+
+    $(document).ready(function(){
+      
+      {% if settings.enable-image-zoom %}
+      $('.colorbox').colorbox();
+      {% endif %}
+
+      {% if settings[navbar-placement] == 'fixed-to-top' and settings.logo-placement == "top-navbar-top" and settings.logo-image and settings.top-navigation-logo-body-scroll-amount and settings.top-navigation-logo-after-scroll-size %}
+      $(document).scroll(function() {
+        var scrolled = $(document).scrollTop();
+        var scroll_amount = parseInt('{{ settings.top-navigation-logo-body-scroll-amount }}', 10);
+
+                                     if(scrolled > scroll_amount) {
+          $('.top-navbar-img').addClass('scrolled');
+          $('body').addClass('top-scrolled');
+        }
+        else {
+          $('.top-navbar-img').removeClass('scrolled');
+          $('body').removeClass('top-scrolled');
+        }
+      });    
+      {% endif %}
+
+      {% if settings.sticky-nav %}
+      var stickyNavTop = $('#navbar-top').offset().top;
+
+      var stickyNav = function(){
+        var scrollTop = $(window).scrollTop();
+
+        if (scrollTop > stickyNavTop) { 
+          $('#navbar-top').addClass('navbar-fixed-top');
+          $('body').css('padding-top', '50px');
+        } else {
+          $('#navbar-top').removeClass('navbar-fixed-top'); 
+          $('body').css('padding-top', '0px');
+        }
+      };
+
+      stickyNav();
+
+      $(window).scroll(function() {
+        stickyNav();
+      });
+      {% endif %}
+
+
+
+      $('.search-bar').typeahead({
+        name: 'Products',
+        local: [{{ typeahead }}]
+      }).on('typeahead:selected', function (object, datum) {
+        $(this).closest('form').submit();
+      });
+
+      {% if settings.quick-shop %}
+
+      $('.quick-shop-toggle').on('click', function(e) {
+        e.preventDefault();
+        var handle = $(this).attr('data-handle');
+        Shopify.getProduct(handle);
+
+        Shopify.onProduct = function(product) {          
+          var quickShopVariantsContainer = $('#quick-shop-variants-wrapper');
+          var quickShopPriceContainer = $('#quick-shop-price');
+
+          // Grab product data
+          var selectedProduct = product;
+          var selectedProductID = selectedProduct.id;
+
+          // Generate variants
+          var productVariants = selectedProduct.variants;
+          var productVariantsCount = productVariants.length;    
+
+          // Build variants element
+          var quickShopVariantElement = $('<select class="quick-shop-variants form-control input-lg" name="id">');
+          var quickShopVariantOptions = '';
+
+          for (var i=0; i < productVariantsCount; i++) {
+            quickShopVariantOptions += '<option value="'+ productVariants[i].id +'">'+ productVariants[i].title +'</option>';
+          };
+
+          // Add variants element to page
+          quickShopVariantElement.append(quickShopVariantOptions);                             
+          quickShopVariantsContainer.html(quickShopVariantElement);
+
+          if (productVariantsCount > 1) {
+            $(quickShopVariantsContainer).show();
+          }
+          else {
+            $(quickShopVariantsContainer).hide();
+          }
+          $(".quick-shop-variants option:first").attr('selected','selected');
+          $('#quick_shop_modal_label').html(product.title);
+          $('#quick-shop-desc').html(product.description);
+          $('#quick-shop-img .thumbnail').html('<img src="'+ selectedProduct.featured_image +'" alt="'+ selectedProduct.title +'" class="" />');
+          $('#quantity').val(1);
+
+          // Determine if product is on sale
+          if ( productVariants[0].compare_at_price > 0 && productVariants[0].compare_at_price > productVariants[0].price ) {
+            quickShopPriceContainer.html('<del class="price_compare">'+ Shopify.formatMoney(productVariants[0].compare_at_price, "{{shop.money_format}}") + '</del>' + '<span class="price_sale">'+ Shopify.formatMoney(productVariants[0].price, "{{shop.money_format}}") +'</span>');
+          } else {
+            quickShopPriceContainer.html('<span class="price">'+ Shopify.formatMoney(productVariants[0].price, "{{shop.money_format}}") + '</span>' );
+          }
+        }
+        });
+		{% endif %}
+
+	//start search bar visibility implementation
+	$(".search-form").hide();
+	$('.search-toggle').on('click', function(e){
+		e.preventDefault();
+		$(this).fadeIn(500, function() {
+			if($('.search-form').css('display') === "none"){
+				$('.search-form').fadeIn(500); 
+			} 
+			else if ($('.search-form').css('display') === "block"){
+				$('.search-form').fadeOut(500);
+			}
+		});
+	}); 
+
+	{% if settings.ajax-cart %}
+	$(document).ajaxCart();
+	{% endif %}
+});
+  </script>
+
+  <input type="hidden" name="_pc_params" value="{{ shop.permanent_domain }}:{{ customer.id }}" />
+
+  <!-- AddShoppers Tracking Code Start -->
+  <script type="text/javascript">
+    AddShoppersTracking = {
+      image: '' // add URL for custom product image (RECOMMENDED if not using Product Schema)
+    }
+    var js = document.createElement('script'); js.type = 'text/javascript'; js.async = true; js.id = 'AddShoppers';
+    js.src = ('https:' == document.location.protocol ? 'https://shop.pe' : 'http://cdn.shop.pe') + '/widget/widget_async.js#5536c433a38764605b9095be';
+    document.getElementsByTagName("head")[0].appendChild(js);
+  </script>
+  <!-- AddShoppers Tracking Code End -->
+  </body>
+</html>
+
+
+{% if template == 'index' %}
+  <style>
+    body.has-top-navbar.has-fixed-top-navbar {
+        padding-top: 70px;
+    }
+  </style>
+{% else %}
+  <style>
+    body.has-top-navbar.has-fixed-top-navbar {
+        padding-top: 115px;
+    }
+  </style>
+{% endif %}
+
+<!-- Facebook Pixel Code -->
+<script>
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window, document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', '2855865311358509');
+  fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+  src="https://www.facebook.com/tr?id=2855865311358509&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Facebook Pixel Code -->
+
+

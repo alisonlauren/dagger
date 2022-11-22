@@ -1,0 +1,39 @@
+/* General */
+.floating-labels .field--show-floating-label .field__input {
+  font-size:18px;
+  padding-bottom: 0.38em;
+  padding-top: 1em; 
+  border: 1px solid #ddd;
+}
+
+/* Header */
+.onelive-checkout-header .container {
+ padding-top: 25px;
+  padding-bottom: 25px;
+}
+
+.shop__logo {
+  max-width: 100%!important;
+  margin: 0 auto!important;
+}
+
+.header .icon--lock {
+  display: none!important; 
+}
+
+.onelive-secure {
+  margin: 0 0 0 auto; 
+}
+
+/* Validation */
+p.error {
+  font-size: 0.85714em;
+  line-height: 1.3em;
+  margin: 0.75em 0 0.25em;
+  color: #ff6d6d; 
+}
+
+input.error {
+  box-shadow: 0 0 0 2px #ff6d6d; 
+}
+
